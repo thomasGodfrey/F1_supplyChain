@@ -1,9 +1,10 @@
 pipeline {
-    agent { docker { image 'abd2fd1439d6a14050d9235c07e31668324bb66da55b7ebbe4e3a299473572a9' } }
+    agent { dockerfile true }
     stages {
-        stage('build') {
+        stage('Test') {
             steps {
                 sh 'node --version'
+                sh 'svn --version'
             }
         }
     }
