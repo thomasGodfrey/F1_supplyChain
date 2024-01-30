@@ -1,9 +1,6 @@
 pipeline {
     agent {
-        docker {
-            // Use the Node.js image for the build environment
-            image 'node'
-        }
+        docker { image 'node:20.11.0-alpine3.19' }
     }
     
     stages {
