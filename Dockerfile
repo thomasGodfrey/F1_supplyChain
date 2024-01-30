@@ -1,20 +1,12 @@
-# Use an official Node.js runtime as a base image
-FROM node:20.11.0-alpine3.19
-
-# Set the working directory in the container
-WORKDIR /usr/src/app
-
-# Copy package.json and package-lock.json to the working directory
-COPY package*.json ./
-
-# Install application dependencies
-RUN npm install
-
-# Copy the application code to the working directory
-COPY . .
-
-# Expose the port the app runs on
-EXPOSE 3000
-
-# Define the command to run your application
-CMD ["npm", "start"]
+FROM jenkins/jenkins:2.426.3-jdk17
+USER root
+RUN apt-get update && apt-get install -y lsb-release
+RUN curl -fsSLo /usr/share/keyrings/docker-archive-keyring.asc \
+  https://download.docker.com/linux/debian/gpg
+RUN echo "deb [arch=$(dpkg --print-architecture) \
+  signed-by=/usr/share/keyrings/docker-archive-keyring.asc] \
+  https://download.docker.com/linux/debian \
+  $(lsb_release -cs) stable" > /etc/apt/sources.list.d/docker.list
+RUN apt-get update && apt-get install -y docker-ce-cli
+USER jenkins
+RUN jenkins-plugin-cli --plugins "blueocean docker-workflow"
