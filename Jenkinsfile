@@ -1,11 +1,17 @@
 pipeline {
     agent any
     stages {
-        stage('build') {
+        stage('No-op') {
             steps {
-                sh 'node --version'
+                sh 'ls'
             }
         }
     }
+    post {
+        failure {
+            mail to: 'thomas.godfrey97@yahoo.com',
+                subject: "Failed Pipeline: ${currentBuild.fullDisplayName}",
+                body: "Something is wrong with ${env.BUILD_URL}"
+        }
+    }   
 }
-
