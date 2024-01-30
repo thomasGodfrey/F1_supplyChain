@@ -1,10 +1,15 @@
 pipeline {
-    agent { dockerfile true}
+    agent {
+        docker {
+            image 'node:20.11.0-alpine3.19' 
+            args '-p 3000:3000' 
+        }
+    }
     stages {
-        stage('No-op') {
+        stage('Build') { 
             steps {
-                sh 'ls'
+                sh 'npm install' 
             }
         }
-    }  
+    }
 }
