@@ -1,12 +1,12 @@
-FROM jenkins/jenkins:2.426.3-jdk17
-USER root
-RUN apt-get update && apt-get install -y lsb-release
-RUN curl -fsSLo /usr/share/keyrings/docker-archive-keyring.asc \
-  https://download.docker.com/linux/debian/gpg
-RUN echo "deb [arch=$(dpkg --print-architecture) \
-  signed-by=/usr/share/keyrings/docker-archive-keyring.asc] \
-  https://download.docker.com/linux/debian \
-  $(lsb_release -cs) stable" > /etc/apt/sources.list.d/docker.list
-RUN apt-get update && apt-get install -y docker-ce-cli
-USER jenkins
-RUN jenkins-plugin-cli --plugins "blueocean docker-workflow"
+## it uses node js image alpine version from image registries.
+FROM node:16
+## it sets directory in the container to /app to store files and launch our app.
+WORKDIR /app
+## it copies the app to /app directory with dependencies.
+COPY package.json /app
+RUN npm install
+COPY . /app
+## it commands to run our app which is index.js.
+CMD node index.js
+##  it exposes the port where our app is running that is port 8080.
+EXPOSE 3000
