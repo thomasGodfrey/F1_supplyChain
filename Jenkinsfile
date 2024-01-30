@@ -1,10 +1,22 @@
 pipeline {
-    agent { docker { image 'node:20.11.0-alpine3.19' } }
+    agent any
     stages {
-        stage('build') {
+        stage('Build') {
             steps {
-                sh 'node --version'
+                sh './gradlew build'
             }
+        }
+        stage('Test') {
+            steps {
+                sh './gradlew check'
+            }
+        }
+    }
+
+    post {
+        always {
+            archiveArtifacts artifacts: 'build/libs/**/*.jar', fingerprint: true
+            junit 'build/reports/**/*.xml'
         }
     }
 }
