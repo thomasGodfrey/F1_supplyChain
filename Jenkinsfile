@@ -1,10 +1,29 @@
 pipeline {
-    agent { dockerfile true }
+    agent {
+        docker {
+            // Use the Node.js image for the build environment
+            image 'node'
+        }
+    }
+    
     stages {
+        stage('Build') {
+            steps {
+                // Install dependencies
+                sh 'npm install'
+            }
+        }
+
         stage('Test') {
             steps {
-                sh 'node --version'
-                sh 'svn --version'
+                // Run tests (adjust as needed)
+                sh 'npm test'
+            }
+        }
+
+        stage('Deploy') {
+            steps {
+                // Additional deployment steps if needed
             }
         }
     }
