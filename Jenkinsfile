@@ -1,31 +1,22 @@
 pipeline {
-    agent any
+    agent { docker { image 'node:20.11.0-alpine3.19' } }
     stages {
-        stage('Build') {
-            agent {
-                docker {
-                    image 'myjenkins-blueocean'
-                    // Run the container on the node specified at the
-                    // top-level of the Pipeline, in the same workspace,
-                    // rather than on a new node entirely:
-                    reuseNode true
-                }
-            }
+        stage('build') {
             steps {
-                sh 'gradle --version'
+                sh 'node --version'
             }
         }
-        post {
-            failure {
-                mail to: 'thomas.godfrey97@yahoo.com',
-                subject: "Failed Pipeline: ${currentBuild.fullDisplayName}",
-                body: "Something is wrong with ${env.BUILD_URL}"
-            }
-            success {
-                mail to: 'thomas.godfrey97@yahoo.com',
-                subject: "Passed Pipeline: ${currentBuild.fullDisplayName}",
-                body: "All good with ${env.BUILD_URL}"                
-            }
-        }  
     }
+    post {
+    failure {
+        mail to: 'thomas.godfrey97@yahoo.com',
+        subject: "Failed Pipeline: ${currentBuild.fullDisplayName}",
+        body: "Something is wrong with ${env.BUILD_URL}"
+    }
+    success {
+        mail to: 'thomas.godfrey97@yahoo.com',
+        subject: "Passed Pipeline: ${currentBuild.fullDisplayName}",
+        body: "All good with ${env.BUILD_URL}"                
+    }
+}
 }
